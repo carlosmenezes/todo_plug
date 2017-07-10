@@ -22,7 +22,6 @@ defmodule TodoPlug.RouterTest do
     assert conn.state == :sent
     assert conn.status == 201
     assert %{"entries" => %{"1" => entry}} = Poison.decode!(conn.resp_body)
-    IO.inspect(Poison.decode!(conn.resp_body), label: "Result First Test")
 
     assert entry["id"] == 1
     assert entry["title"] == "Elixir Study Group"
@@ -48,5 +47,16 @@ defmodule TodoPlug.RouterTest do
     assert entry2["id"] == 2
     assert entry2["title"] == "Another TODO"
     assert entry2["date"] == "2017-07-15"
+  end
+
+  test "it retrieves todos by date" do
+    conn(:post, "/todos", ~s({"date": "2017-07-13", "title": "Elixir Study Group"}))
+      |> put_req_header("content-type", "application/json")
+      |> Router.call(@opts)
+    conn = conn(:get, "/todos/2017-07-13", "")
+      |> Router.call(@opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
   end
 end

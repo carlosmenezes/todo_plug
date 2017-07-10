@@ -18,5 +18,16 @@ defmodule TodoPlug.Router do
       |> send_resp(201, result)
   end
 
+  get "/todos/:date" do
+
+    result = :todo_server
+      |> TodoList.entries(date)
+      |> Poison.encode!
+
+    conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, result)
+  end
+
   match _, do: send_resp(conn, 404, "Not Found.")
 end

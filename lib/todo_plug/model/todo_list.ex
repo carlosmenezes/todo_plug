@@ -52,10 +52,10 @@ defmodule TodoPlug.Model.TodoList do
 
   def handle_call({:entries, date}, _, %TodoList{entries: entries} = state) do
     result = entries
-    |> Stream.filter(fn({_, entry}) -> entry.date == date end)
+    |> Stream.filter(fn({_, entry}) -> entry["date"] == date end)
     |> Enum.map(fn({_, entry}) -> entry end)
 
-    {result, state}
+    {:reply, result, state}
   end
 
   def handle_call({:delete_entry, entry_id}, _, %TodoList{entries: entries} = state) do
