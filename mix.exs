@@ -15,7 +15,7 @@ defmodule TodoPlug.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger, :cowboy, :plug, :poison],
+    [extra_applications: [:logger, :cowboy, :plug, :poison, :ecto, :mariaex],
      mod: {TodoPlug.Application, []}]
   end
 
@@ -32,7 +32,9 @@ defmodule TodoPlug.Mixfile do
     [
       {:cowboy, "~> 1.1.2"},
       {:plug, "~> 1.3.5"},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:ecto, "~> 2.1.4"},
+      {:mariaex, "~> 0.8.2"}
     ]
   end
 end

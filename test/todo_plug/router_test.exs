@@ -6,57 +6,45 @@ defmodule TodoPlug.RouterTest do
 
   @opts Router.init([])
 
-  setup do
-    TodoPlug.Model.TodoList.start_link([])
+  describe "POST /todos" do
+    test "it creates a todo" do
+      conn = conn(:post, "/todos", ~s({"date": "2017-07-13", "title": "Elixir Study Group"}))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
 
-    on_exit fn ->
-      if GenServer.whereis(:todo_server), do: GenServer.stop(:todo_server)
+      assert conn.state == :sent
+      assert conn.status == 201
+      assert %{} = todo = Poison.decode!(conn.resp_body)
+
+      assert todo["title"] == "Elixir Study Group"
+      assert todo["date"] == "2017-07-13"
+    end
+
+    test "it returns bad request with invalid data" do
+      conn = conn(:post, "/todos", ~s({"date": "2001-01-01"}))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 400
+      assert conn.resp_body == "Bad Request"
     end
   end
 
-  test "it creates a todo" do
-    conn = conn(:post, "/todos", ~s({"date": "2017-07-13", "title": "Elixir Study Group"}))
-      |> put_req_header("content-type", "application/json")
-      |> Router.call(@opts)
+  describe "GET /todos" do
+    test "it retrieves todos by date" do
+      conn(:post, "/todos", ~s({"date": "2017-07-13", "title": "Elixir Study Group"}))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+      conn = conn(:get, "/todos/2017-07-13", "")
+        |> Router.call(@opts)
 
-    assert conn.state == :sent
-    assert conn.status == 201
-    assert %{"entries" => %{"1" => entry}} = Poison.decode!(conn.resp_body)
+      assert conn.state == :sent
+      assert conn.status == 200
+      assert [%{} = todo | _] = Poison.decode!(conn.resp_body)
 
-    assert entry["id"] == 1
-    assert entry["title"] == "Elixir Study Group"
-    assert entry["date"] == "2017-07-13"
-  end
-
-  test "it retains state between requests" do
-    conn(:post, "/todos", ~s({"date": "2017-07-13", "title": "Elixir Study Group"}))
-      |> put_req_header("content-type", "application/json")
-      |> Router.call(@opts)
-    conn = conn(:post, "/todos", ~s({"date": "2017-07-15", "title": "Another TODO"}))
-      |> put_req_header("content-type", "application/json")
-      |> Router.call(@opts)
-
-    assert conn.state == :sent
-    assert conn.status == 201
-    assert %{"entries" => %{"1" => entry, "2" => entry2}} = Poison.decode!(conn.resp_body)
-
-    assert entry["id"] == 1
-    assert entry["title"] == "Elixir Study Group"
-    assert entry["date"] == "2017-07-13"
-
-    assert entry2["id"] == 2
-    assert entry2["title"] == "Another TODO"
-    assert entry2["date"] == "2017-07-15"
-  end
-
-  test "it retrieves todos by date" do
-    conn(:post, "/todos", ~s({"date": "2017-07-13", "title": "Elixir Study Group"}))
-      |> put_req_header("content-type", "application/json")
-      |> Router.call(@opts)
-    conn = conn(:get, "/todos/2017-07-13", "")
-      |> Router.call(@opts)
-
-    assert conn.state == :sent
-    assert conn.status == 200
+      assert todo["title"] == "Elixir Study Group"
+      assert todo["date"] == "2017-07-13"
+    end
   end
 end

@@ -2,6 +2,16 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
+config :todo_plug, ecto_repos: [TodoPlug.Repo.TodoRepo]
+
+config :todo_plug, TodoPlug.Repo.TodoRepo,
+  adapter: Ecto.Adapters.MySQL,
+  database: "todo_plug",
+  username: "root",
+  password: "root",
+  hostname: "mysql"
+
+
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,

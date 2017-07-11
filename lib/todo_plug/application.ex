@@ -10,7 +10,8 @@ defmodule TodoPlug.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
-      Plug.Adapters.Cowboy.child_spec(:http, TodoPlug.Router, [TodoPlug.Model.TodoList.start_link([])], port: 3000)
+      Plug.Adapters.Cowboy.child_spec(:http, TodoPlug.Router, [], port: 3000),
+      supervisor(TodoPlug.Repo.TodoRepo, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
