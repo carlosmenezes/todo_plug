@@ -47,4 +47,39 @@ defmodule TodoPlug.RouterTest do
       assert todo["date"] == "2017-07-13"
     end
   end
+
+  describe "PUT /todos" do
+    test "it updates a todo" do
+      conn = conn(:post, "/todos", ~s({"date": "2017-07-13", "title": "Elixir Study Group"}))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+      todo_json = Poison.decode!(conn.resp_body)
+      conn = conn(:put, "/todos/#{todo_json["id"]}", ~s({"date": "2017-07-21", "title": "Updated Elixir Study Group"}))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 200
+      assert %{} = todo = Poison.decode!(conn.resp_body)
+
+      assert todo["title"] == "Updated Elixir Study Group"
+      assert todo["date"] == "2017-07-21"
+    end
+  end
+
+  describe "DELETE /todos" do
+    test "it deletes a todo" do
+      conn = conn(:post, "/todos", ~s({"date": "2017-07-13", "title": "Elixir Study Group"}))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+      todo_json = Poison.decode!(conn.resp_body)
+      conn = conn(:delete, "/todos/#{todo_json["id"]}")
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 204
+      assert conn.resp_body == "No Content"
+    end
+  end
 end

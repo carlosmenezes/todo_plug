@@ -19,15 +19,36 @@ defmodule TodoPlug.Router do
   end
 
   get "/todos/:date" do
-    
-    result = Todo.find(date)
+    result = Todo.find_by_date(date)
     conn
       |> put_resp_content_type("application/json")
       |> send_resp(200, Poison.encode!(result))
   end
 
-  put "/todos/:date" do
+  put "/todos/:id" do
+    case Todo.find(id) do
+      nil -> send_resp(conn, 404, "Not Found")
+      todo ->
+        case Todo.update(todo, conn.params) do
+          {:ok, result} -> conn
+            |> put_resp_content_type("application/json")
+            |> send_resp(200, Poison.encode!(result))
+          {:error, _} -> send_resp(conn, 400, "Bad Request")
+        end
+    end
+  end
 
+  delete "/todos/:id" do
+    case Todo.find(id) do
+      nil -> send_resp(conn, 404, "Not Found")
+      todo ->
+        case Todo.delete(todo) do
+          {:ok, result} -> conn
+            |> put_resp_content_type("application/json")
+            |> send_resp(204, "No Content")
+          {:error, _} -> send_resp(conn, 400, "Bad Request")
+        end
+    end
   end
 
   match _, do: send_resp(conn, 404, "Not Found.")
