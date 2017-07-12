@@ -6,6 +6,10 @@ defmodule TodoPlug.RouterTest do
 
   @opts Router.init([])
 
+  setup do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(TodoPlug.Repo.TodoRepo)
+  end
+
   describe "POST /todos" do
     test "it creates a todo" do
       conn = conn(:post, "/todos", ~s({"date": "2017-07-13", "title": "Elixir Study Group"}))

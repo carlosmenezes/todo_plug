@@ -4,12 +4,7 @@ use Mix.Config
 
 config :todo_plug, ecto_repos: [TodoPlug.Repo.TodoRepo]
 
-config :todo_plug, TodoPlug.Repo.TodoRepo,
-  adapter: Ecto.Adapters.MySQL,
-  database: "todo_plug",
-  username: "root",
-  password: "root",
-  hostname: "mysql"
+import_config "#{Mix.env}.exs"
 
 
 # This configuration is loaded before any dependency and is restricted
