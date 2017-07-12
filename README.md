@@ -1,19 +1,11 @@
 # TodoPlug
 
-**TODO: Add description**
+A simple TODO api made with [Plug](https://github.com/elixir-lang/plug) and [Ecto](https://github.com/elixir-ecto/ecto).
 
-## Installation
+## Instructions
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `todo_plug` to your list of dependencies in `mix.exs`:
+This app runs on Docker so have both [Docker](https://www.docker.com/get-docker) and [Docker Compose](https://docs.docker.com/compose/install) installed.
 
-```elixir
-def deps do
-  [{:todo_plug, "~> 0.1.0"}]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/todo_plug](https://hexdocs.pm/todo_plug).
-
+- __build app:__ `docker-compose build`
+- __run tests:__ `docker-compose run --rm web mix test`
+- __run app:__ `docker-compose up`

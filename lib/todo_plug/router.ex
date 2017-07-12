@@ -43,9 +43,7 @@ defmodule TodoPlug.Router do
       nil -> send_resp(conn, 404, "Not Found")
       todo ->
         case Todo.delete(todo) do
-          {:ok, result} -> conn
-            |> put_resp_content_type("application/json")
-            |> send_resp(204, "No Content")
+          {:ok, _} -> send_resp(conn, 204, "No Content")
           {:error, _} -> send_resp(conn, 400, "Bad Request")
         end
     end
