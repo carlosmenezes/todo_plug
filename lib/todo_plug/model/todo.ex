@@ -45,7 +45,8 @@ defmodule TodoPlug.Model.Todo do
   end
 
   defp changeset(todo, params \\ :empty) do
-    cast(todo, params, [:date, :title])
+    todo
+      |> cast(params, [:date, :title])
       |> validate_required(@required_fields)
   end
 end

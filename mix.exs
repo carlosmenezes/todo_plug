@@ -34,7 +34,8 @@ defmodule TodoPlug.Mixfile do
       {:plug, "~> 1.3.5"},
       {:poison, "~> 3.1"},
       {:ecto, "~> 2.1.4"},
-      {:mariaex, "~> 0.8.2"}
+      {:mariaex, "~> 0.8.2"},
+      {:credo, "~> 0.8", only: [:dev, :test], runtime: false}
     ]
   end
 end
