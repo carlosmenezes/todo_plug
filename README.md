@@ -1,5 +1,7 @@
 # TodoPlug
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c236546900594b31ab2d3fb961d469f2)](https://www.codacy.com/app/pachecomenezes/todo_plug?utm_source=github.com&utm_medium=referral&utm_content=carlosmenezes/todo_plug&utm_campaign=badger)
+
 A simple TODO api made with [Plug](https://github.com/elixir-lang/plug) and [Ecto](https://github.com/elixir-ecto/ecto).
 
 ## Instructions
